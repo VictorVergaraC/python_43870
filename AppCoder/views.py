@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Template, Context, loader
 from .models import Curso, Profesor, Estudiante
+from .forms import CursoForm
 
 # Create your views here.
 
@@ -36,6 +37,30 @@ def estudiantes(request):
 def cursos(request):
     cursos = Curso.objects.all()
     return render(request, "AppCoder/cursos.html", {"cursos":cursos})
+
+def cursoFormulario(request):
+    if request.method == "POST":
+        mensaje = ""
+        # nombre   = request.POST["nombre"]
+        # comision = request.POST["comision"]
+        # curso = Curso(nombre=str(nombre).capitalize(), comision=comision)
+        # curso.save()
+
+        form = CursoForm(request.POST)
+        if form.is_valid():
+            info = form.cleaned_data
+            nombre   = info["nombre"]
+            comision = info["comision"]
+            curso = Curso(nombre=str(nombre).capitalize(), comision=comision)
+            curso.save()
+            mensaje = "Curso creado satisfactoriamente!"
+        else:
+            mensaje = "Formulario inválido!"
+        
+        return render(request, "AppCoder/cursoFormulario.html", {"mensaje":mensaje})
+    
+    formulario_curso = CursoForm()
+    return render(request, "AppCoder/cursoFormulario.html",{"formulario":formulario_curso})
 
 def entregables(request):
 

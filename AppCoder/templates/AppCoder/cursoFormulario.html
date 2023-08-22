@@ -1,0 +1,18 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} ESTE ES UN FORMULARIO DE CARGA DE CURSOS {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<h2>Formulario</h2>
+
+<form action="{% url 'cursoFormulario' %}" method="POST"> {% csrf_token %}
+    {{ formulario.as_p }}
+    <button type="submit" class="btn btn-outline-success m-2">Guardar</button>
+</form>
+
+<h4>{{ mensaje }}</h4>
+
+{% endblock %}
