@@ -20,3 +20,23 @@ def listar_cursos(request):
     for curso in cursos:
         respuesta += f"Curso: {curso.nombre} - Comisión: {curso.comision}<br>"
     return HttpResponse(respuesta)
+
+def inicio(request):
+
+    return HttpResponse("Vista inicio")
+
+def profesores(request):
+
+    return HttpResponse("Vista profesores")
+
+def estudiantes(request):
+
+    return HttpResponse("Vista estudiantes")
+
+def cursos(request):
+
+    return HttpResponse("Vista cursos")
+
+def entregables(request):
+
+    return HttpResponse("Vista entregables")
