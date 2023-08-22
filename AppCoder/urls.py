@@ -4,8 +4,8 @@ from .views import *
 urlpatterns = [
     path('crear_curso', crear_curso),
     path('listar_cursos', listar_cursos),
-    path('profesores', profesores),
-    path('estudiantes', estudiantes),
-    path('cursos', cursos),
-    path('entregables', entregables),
+    path('profesores', profesores, name="profesores"),
+    path('estudiantes', estudiantes, name="estudiantes"),
+    path('cursos', cursos, name="cursos"),
+    path('entregables', entregables, name="entregables"),
 ]

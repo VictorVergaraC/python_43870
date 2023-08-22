@@ -23,20 +23,20 @@ def listar_cursos(request):
 
 def inicio(request):
 
-    return HttpResponse("Vista inicio")
+    return render(request,"AppCoder/inicio.html")
 
 def profesores(request):
 
-    return HttpResponse("Vista profesores")
+    return render(request,"AppCoder/profesores.html")
 
 def estudiantes(request):
 
-    return HttpResponse("Vista estudiantes")
+    return render(request,"AppCoder/estudiantes.html")
 
 def cursos(request):
-
-    return HttpResponse("Vista cursos")
+    cursos = Curso.objects.all()
+    return render(request,"AppCoder/cursos.html", {"cursos":cursos})
 
 def entregables(request):
 
-    return HttpResponse("Vista entregables")
+    return render(request,"AppCoder/entregables.html")
