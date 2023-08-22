@@ -35,7 +35,7 @@ def estudiantes(request):
 
 def cursos(request):
     cursos = Curso.objects.all()
-    return render(request,"AppCoder/cursos.html", {"cursos":cursos})
+    return render(request, "AppCoder/cursos.html", {"cursos":cursos})
 
 def entregables(request):
 
