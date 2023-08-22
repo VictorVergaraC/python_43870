@@ -1,0 +1,28 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} ESTA ES LA PÁGINA DE RESULTADOS DE BÚSQUEDA {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <h2>ESTE ES EL CONTENIDO DE LA PÁGINA DE RESULTADOS DE BÚSQUEDA!</h2>
+    {% if cursos %}
+        <ul>
+
+        {% for curso in cursos %}
+            <li>{{ curso.nombre }} - {{ curso.comision }}</li>
+        {% endfor %}
+
+        </ul>
+    
+    {% else %}
+
+        {% if mensaje %}
+            <h5>{{ mensaje }}</h5>
+        {% endif %}
+    {% endif %}
+    <a href="{% url 'busquedaComision' %}" class="btn btn-warning">Volver</a>
+
+    
+{% endblock %}

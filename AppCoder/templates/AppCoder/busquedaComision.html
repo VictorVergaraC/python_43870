@@ -1,0 +1,20 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} ESTA ES LA BÚSQUEDA DE COMISIONES {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <main class="mt-5 p-2">
+        <h1>ESTE ES EL CONTENIDO DE LA PÁGINA DE COMISIONES!</h1>
+
+        <form action="{% url 'buscar' %}" method="GET" class="d-flex">
+            
+            <input type="text" id="comision" name="comision" placeholder="Ingresa una comisión ..." class="form-control">
+            
+            <button type="submit" class="btn btn-outline-success m-2">Buscar</button>
+        </form>
+    </main>
+
+{% endblock %}

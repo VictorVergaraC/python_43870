@@ -6,11 +6,25 @@
 
 {% block contenido_que_cambia %}
 
-    <h6>Profesores</h6>
+<h2>Profesores</h2>
+<form action="{% url 'profesores' %}" method="post" class="m-5 p-2">
+    {% csrf_token %}
+    <table>
+        {{ formulario.as_table }}
+    </table>
+    <button type="submit" class="btn btn-outline-success m-2">Guardar</button>
+</form>
+{% if mensaje != "" %}
+    <h4 class="m-2">{{ mensaje }}</h4>
+{% endif %}
+
+<section class="m-5">
+    <h6>Listado de Profesores</h6>
     <ul>
         {% for profe in profes %}
-        <li>{{ profe.nombre }}  {{ profe.apellido }}</li>
+            <li>{{ profe.nombre }} {{ profe.apellido }}</li>
         {% endfor %}
     </ul>
+</section>
 
 {% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Template, Context, loader
 from .models import Curso, Profesor, Estudiante
-from .forms import CursoForm
+from .forms import CursoForm, ProfesorForm
 
 # Create your views here.
 
@@ -28,24 +28,48 @@ def inicio(request):
 
 def profesores(request):
     profes = Profesor.objects.all()
-    return render(request,"AppCoder/profesores.html", {"profes":profes})
+
+    formulario = ProfesorForm()
+    mensaje = ""
+    if request.method == "POST":
+
+        form = ProfesorForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            nombre    = data["nombre"]
+            apellido  = data["apellido"]
+            email     = data["email"]
+            profesion = data["profesion"]
+
+            new_profe = Profesor(nombre=str(nombre).capitalize(), apellido=str(apellido).capitalize(), email=str(email).lower(), profesion = str(profesion).capitalize())
+            new_profe.save()
+            mensaje = "Profesor creado!"
+        else:
+            mensaje = "Formulario inválido!"
+            pass
+
+    return render(request,
+                  "AppCoder/profesores.html", 
+                  {"profes":profes, "formulario":formulario, "mensaje":mensaje}
+            )
 
 def estudiantes(request):
     estudiantes = Estudiante.objects.all()
-    return render(request,"AppCoder/estudiantes.html", {"estudiantes":estudiantes})
+    return render(request,
+                  "AppCoder/estudiantes.html", 
+                  {"estudiantes":estudiantes}
+            )
+
+
 
 def cursos(request):
-    cursos = Curso.objects.all()
-    return render(request, "AppCoder/cursos.html", {"cursos":cursos})
-
-def cursoFormulario(request):
     if request.method == "POST":
-        mensaje = ""
         # nombre   = request.POST["nombre"]
         # comision = request.POST["comision"]
         # curso = Curso(nombre=str(nombre).capitalize(), comision=comision)
         # curso.save()
-
+        mensaje = "Formulario inválido!"
         form = CursoForm(request.POST)
         if form.is_valid():
             info = form.cleaned_data
@@ -54,14 +78,29 @@ def cursoFormulario(request):
             curso = Curso(nombre=str(nombre).capitalize(), comision=comision)
             curso.save()
             mensaje = "Curso creado satisfactoriamente!"
-        else:
-            mensaje = "Formulario inválido!"
-        
-        return render(request, "AppCoder/cursoFormulario.html", {"mensaje":mensaje})
+            
+        return render(request, "AppCoder/cursos.html", {"mensaje":mensaje})
     
     formulario_curso = CursoForm()
-    return render(request, "AppCoder/cursoFormulario.html",{"formulario":formulario_curso})
+    return render(request, "AppCoder/cursos.html",{"formulario":formulario_curso})
 
 def entregables(request):
 
-    return render(request,"AppCoder/entregables.html")
+    return render(request,"AppCoder/cursos.html")
+
+def busquedaComision(request):
+
+    return render(request,"AppCoder/busquedaComision.html")
+
+def buscar(request):
+    comision = request.GET["comision"]
+    mensaje = "Sin resultados!"
+    if comision != "":
+        listar_cursos = Curso.objects.filter(comision__icontains=comision)
+        if listar_cursos:
+            mensaje = ""
+    return render(
+            request,
+            "AppCoder/resultadosBusqueda.html",
+            {"cursos":listar_cursos, "mensaje":mensaje}
+        )
