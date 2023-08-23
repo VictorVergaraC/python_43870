@@ -4,27 +4,54 @@
 
 {% block titulo %} ESTA ES LA PÁGINA DE LOS PROFESORES {% endblock %}
 
+{% block title %} Profesores {% endblock %}
+
 {% block contenido_que_cambia %}
 
 <h2>Profesores</h2>
-<form action="{% url 'profesores' %}" method="post" class="m-5 p-2">
-    {% csrf_token %}
-    <table>
-        {{ formulario.as_table }}
-    </table>
-    <button type="submit" class="btn btn-outline-success m-2">Guardar</button>
-</form>
-{% if mensaje != "" %}
-    <h4 class="m-2">{{ mensaje }}</h4>
-{% endif %}
+<main class="d-flex">
+    <section class="d-flex flex-column">
+        <form action="{% url 'profesores' %}" method="post" class="m-2 p-2">
+            {% csrf_token %}
+            <table>
+                {{ formulario.as_table }}
+            </table>
+            <button type="submit" class="btn btn-outline-success m-2 btn-sm">Guardar</button>
+        </form>
+        {% if mensaje != "" %}
+            <h4 class="m-2">{{ mensaje }}</h4>
+        {% endif %}
+    </section>
+    
+    <section class="m-2">
+    
+        <table class="table table-sm m-2">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Profesion</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profe in profes %}
+                <tr>
+                    <td>{{ profe.nombre }}</td>
+                    <td>{{ profe.apellido }}</td>
+                    <td>{{ profe.email }}</td>
+                    <td>{{ profe.profesion }}</td>
+                    <td class="d-flex">
+                        <a href="{% url 'editarProfesor' profe.id %}"" class="btn btn-primary btn-sm mx-1">Editar</a>
+                        <a href="{% url 'eliminarProfesor' profe.id %}" class="btn btn-danger btn-sm mx-1">Borrar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 
-<section class="m-5">
-    <h6>Listado de Profesores</h6>
-    <ul>
-        {% for profe in profes %}
-            <li>{{ profe.nombre }} {{ profe.apellido }}</li>
-        {% endfor %}
-    </ul>
-</section>
+</main>
 
 {% endblock %}

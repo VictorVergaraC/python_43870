@@ -27,9 +27,8 @@ def inicio(request):
     return render(request,"AppCoder/inicio.html")
 
 def profesores(request):
-    profes = Profesor.objects.all()
-
-    formulario = ProfesorForm()
+    
+    # formulario = ProfesorForm()
     mensaje = ""
     if request.method == "POST":
 
@@ -37,22 +36,68 @@ def profesores(request):
         if form.is_valid():
             data = form.cleaned_data
 
-            nombre    = data["nombre"]
-            apellido  = data["apellido"]
-            email     = data["email"]
-            profesion = data["profesion"]
+            nombre    = str(data["nombre"]).rstrip()
+            apellido  = str(data["apellido"]).rstrip()
+            email     = str(data["email"]).rstrip()
+            profesion = str(data["profesion"]).rstrip()
 
             new_profe = Profesor(nombre=str(nombre).capitalize(), apellido=str(apellido).capitalize(), email=str(email).lower(), profesion = str(profesion).capitalize())
             new_profe.save()
             mensaje = "Profesor creado!"
         else:
             mensaje = "Formulario inválido!"
-            pass
-
+    
+    formulario = ProfesorForm()
+    profes = Profesor.objects.all()
     return render(request,
                   "AppCoder/profesores.html", 
                   {"profes":profes, "formulario":formulario, "mensaje":mensaje}
             )
+
+def eliminarProfesor(request, id):
+    profesor = Profesor.objects.get(id=id)
+    profesor.delete()
+
+    formulario = ProfesorForm()
+    profes = Profesor.objects.all()
+    return render(request,
+                  "AppCoder/profesores.html", 
+                  {"profes":profes, "formulario":formulario, "mensaje":"Profesor Eliminado!"}
+            )
+
+def editarProfesor(request, id):
+    profesor = Profesor.objects.get(id=id)
+    if request.method == "POST":
+        form = ProfesorForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            
+            profesor.nombre    = str(data["nombre"]).rstrip()
+            profesor.apellido  = str(data["apellido"]).rstrip()
+            profesor.email     = str(data["email"]).rstrip()
+            profesor.profesion = str(data["profesion"]).rstrip()
+
+            profesor.save()
+            mensaje = "Profesor editado correctamente!"
+
+            profes = Profesor.objects.all()
+            formulario = ProfesorForm()
+
+            return render(request,
+                  "AppCoder/profesores.html", 
+                  {"profes":profes, "formulario":formulario, "mensaje":mensaje}
+            )
+    else:
+        formulario = ProfesorForm(initial= {
+            "nombre":profesor.nombre,
+            "apellido":profesor.apellido,
+            "email":profesor.email,
+            "profesion":profesor.profesion
+        })
+        return render(request,
+                      "AppCoder/editarProfesor.html",
+                      { "formulario":formulario, "profesor":profesor }
+                )
 
 def estudiantes(request):
     estudiantes = Estudiante.objects.all()

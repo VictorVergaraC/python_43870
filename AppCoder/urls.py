@@ -10,4 +10,6 @@ urlpatterns = [
     path('entregables', entregables, name="entregables"),
     path('busquedaComision', busquedaComision, name="busquedaComision"),
     path('buscar', buscar, name="buscar"),
+    path('eliminarProfesor/<id>', eliminarProfesor, name="eliminarProfesor"),
+    path('editarProfesor/<id>', editarProfesor, name="editarProfesor"),
 ]

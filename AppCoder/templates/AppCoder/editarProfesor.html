@@ -1,0 +1,28 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} EDITANDO PROFESOR: {{ profesor }} {% endblock %}
+
+{% block title %} Profesores {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<h2>Profesores</h2>
+<main class="d-flex">
+    <section class="d-flex flex-column">
+        <form action="{% url 'editarProfesor' profesor.id %}" method="post" class="m-2 p-2">
+            {% csrf_token %}
+            <table>
+                {{ formulario.as_table }}
+            </table>
+            <button type="submit" class="btn btn-outline-success m-2 btn-sm">Actualizar</button>
+        </form>
+        {% if mensaje != "" %}
+            <h4 class="m-2">{{ mensaje }}</h4>
+        {% endif %}
+    </section>
+    
+</main>
+
+{% endblock %}
