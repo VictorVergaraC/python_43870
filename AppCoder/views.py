@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Template, Context, loader
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Curso, Profesor, Estudiante
 from .forms import CursoForm, ProfesorForm
@@ -166,6 +166,11 @@ class EstudianteDetalle(DetailView):
     model = Estudiante
     template_name = "AppCoder/estudiante_detail.html"
 
-class EstudianteDelete(DetailView):
+class EstudianteDelete(DeleteView):
     model = Estudiante
     success_url = reverse_lazy("estudiante_list")
+
+class EstudianteUpdate(UpdateView):
+    model = Estudiante
+    success_url = reverse_lazy("estudiante_list")
+    fields = ['nombre', 'apellido', 'email']

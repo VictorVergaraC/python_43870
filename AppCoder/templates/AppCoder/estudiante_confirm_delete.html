@@ -7,11 +7,15 @@
 {% block titulo %} FORMULARIO DE ESTUDIANTES {% endblock %}
 
 {% block contenido_que_cambia %}
-<h2>FORMULARIO DE ESTUDIANTES!</h2>
 
-<form method="post">{% csrf_token %}
-    estas seguro que deseas borrar el estudiante "{{ object }}"?
-    <input type="submit" value="SI">
+<main class="container-fluid p-5">
 
-</form>
+    <form method="post" class="d-flex flex-column">
+        {% csrf_token %}
+        Seguro que deseas eliminar al estudiante "{{ object }}" ??
+        <input type="submit" value="SI" class="btn btn-success btn-sm mt-2">
+    </form>
+
+</main>
+
 {% endblock %}

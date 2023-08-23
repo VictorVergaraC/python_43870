@@ -15,6 +15,7 @@
         <div class="d-flex">
                 <li class="mt-2"> <strong>{{ estudiante }}</strong> 
                     <a href="{% url 'estudiante_detalle' estudiante.id %}" class="btn btn-primary btn-sm mx-1">Mostrar</a>
+                    <a href="{% url 'estudiante_editar' estudiante.id %}" class="btn btn-warning btn-sm mx-1">Editar</a>
                     <a href="{% url 'estudiante_borrar' estudiante.id %}" class="btn btn-danger btn-sm mx-1">Borrar</a>
                 </li>
                 
