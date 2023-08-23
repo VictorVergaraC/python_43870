@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Template, Context, loader
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DetailView
+from django.urls import reverse_lazy
 from .models import Curso, Profesor, Estudiante
 from .forms import CursoForm, ProfesorForm
 
@@ -71,7 +73,7 @@ def editarProfesor(request, id):
         form = ProfesorForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            
+
             profesor.nombre    = str(data["nombre"]).rstrip()
             profesor.apellido  = str(data["apellido"]).rstrip()
             profesor.email     = str(data["email"]).rstrip()
@@ -149,3 +151,21 @@ def buscar(request):
             "AppCoder/resultadosBusqueda.html",
             {"cursos":listar_cursos, "mensaje":mensaje}
         )
+
+
+class EstudiantesList(ListView):
+    model = Estudiante
+    template_name = "AppCoder/estudiantes.html"
+
+class EstudianteCreacion(CreateView):
+    model = Estudiante
+    success_url = reverse_lazy("estudiante_list")
+    fields = ['nombre', 'apellido', 'email']
+
+class EstudianteDetalle(DetailView):
+    model = Estudiante
+    template_name = "AppCoder/estudiante_detail.html"
+
+class EstudianteDelete(DetailView):
+    model = Estudiante
+    success_url = reverse_lazy("estudiante_list")

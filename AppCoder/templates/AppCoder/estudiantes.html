@@ -2,17 +2,29 @@
 
 {% load static %}
 
-{% block title %} Estudiantes {% endblock %}
+{% block title %} Agregar Estudiante {% endblock %}
 
 {% block titulo %} ESTA ES LA PÁGINA DE LOS ESTUDIANTES {% endblock %}
 
 {% block contenido_que_cambia %}
+<main class="container-fluid">
 
     <h6>Estudiantes</h6>
     <ul>
-        {% for estudiante in estudiantes %}
-        <li>{{ estudiante.nombre }}  {{ estudiante.apellido }}</li>
+        {% for estudiante in object_list %}
+        <div class="d-flex">
+                <li class="mt-2"> <strong>{{ estudiante }}</strong> 
+                    <a href="{% url 'estudiante_detalle' estudiante.id %}" class="btn btn-primary btn-sm mx-1">Mostrar</a>
+                    <a href="{% url 'estudiante_borrar' estudiante.id %}" class="btn btn-danger btn-sm mx-1">Borrar</a>
+                </li>
+                
+            </div>
         {% endfor %}
+        <br>
+        <br>
+        <a href="{% url 'estudiante_crear' %}" class="btn btn-success btn-sm mx-1">Agregar Estudiante</a>
     </ul>
+
+</main>
 
 {% endblock %}

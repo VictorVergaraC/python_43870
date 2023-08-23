@@ -1,0 +1,21 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block title %} Estudiantes {% endblock %}
+
+{% block titulo %} FORMULARIO DE ESTUDIANTES {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<main class="container-fluid p-5">
+    <section class="d-flex">
+        <form method="post" class="d-flex flex-column">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <input type="submit" value="Guardar" class="btn btn-success btn-sm mt-2">
+        </form>
+    </section>
+</main>
+
+{% endblock %}

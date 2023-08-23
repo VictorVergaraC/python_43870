@@ -1,0 +1,20 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block title %} Estudiantes {% endblock %}
+
+{% block titulo %} DATOS DEL ESTUDIANTE {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<main class="container-fluid p-5">
+    <h2>Datos del Estudiante</h2>
+    <section class="d-flex flex-column">
+        <p>Nombre:   <i>{{ estudiante.nombre }}</i> </p>
+        <p>Apellido: <i>{{ estudiante.apellido }}</i> </p>
+        <p>Email:    <i>{{ estudiante.email }}</i> </p>
+    </section>
+</main>
+
+{% endblock %}
