@@ -36,4 +36,16 @@ class Entregable(models.Model):
     nombre        = models.CharField(max_length=50)
     fecha_entrega = models.DateField()
     entregado     = models.BooleanField()
+
+# PRE ENTREGA 3
+
+class Producto(models.Model):
+    descripcion = models.CharField(max_length=50)
+    marca       = models.CharField(max_length=50)
+    precio      = models.IntegerField()
+    stock       = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.descripcion} ({self.marca})"
+
     
