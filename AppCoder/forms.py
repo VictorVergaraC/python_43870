@@ -38,3 +38,15 @@ class ProductosForm(forms.Form):
     marca       = forms.CharField(max_length=50)
     precio      = forms.IntegerField()
     stock       = forms.IntegerField()
+
+class VendedoresForm(forms.Form):
+    nombre    = forms.CharField(max_length=50)
+    apellido  = forms.CharField(max_length=50)
+    email     = forms.EmailField()
+    direccion = forms.CharField(max_length=50)
+    seccion   = forms.CharField(max_length=50)
+
+class CategoriasForm(forms.Form):
+    nombre      = forms.CharField(max_length=50)
+    descripcion = forms.CharField(max_length=50)
+    activo      = forms.BooleanField(required=False)

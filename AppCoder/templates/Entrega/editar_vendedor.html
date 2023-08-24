@@ -1,0 +1,25 @@
+{% extends "Entrega/padre.html" %}
+
+{% load static %}
+
+{% block title %} Productos {% endblock %}
+
+{% block titulo %} Editar Vendedor: {{ vendedor.nombre }} {{ vendedor.apellido }} {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <main class="d-flex p-5">
+
+        <div class="mx-2">
+            <!-- FORMULARIO -->
+            <form action="{% url 'editar_vendedor' vendedor.id %}" method="post" class="d-flex flex-column">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <input type="submit" value="Guardar" class="btn btn-success btn-sm mt-2">
+            </form>
+            <h5>{{ mensaje }}</h5>
+        </div>
+    </main>
+
+
+{% endblock %}

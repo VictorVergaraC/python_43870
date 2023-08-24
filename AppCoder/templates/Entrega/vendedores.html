@@ -2,19 +2,19 @@
 
 {% load static %}
 
-{% block title %} Productos {% endblock %}
+{% block title %} Vendedores {% endblock %}
 
-{% block titulo %} Listado de Productos {% endblock %}
+{% block titulo %} Listado de Vendedores {% endblock %}
 
 {% block contenido_que_cambia %}
 
-    <h2>Productos</h2>
+    <h2>Vendedores</h2>
 
     <main class="d-flex p-5">
 
         <div class="mx-2" style="max-width: 600px;">
             <!-- FORMULARIO -->
-            <form action="{% url 'listado_productos' %}" method="post" class="d-flex flex-column">
+            <form action="{% url 'listado_vendedores' %}" method="post" class="d-flex flex-column">
                 {% csrf_token %}
                 {{ form.as_table }}
                 <input type="submit" value="Guardar" class="btn btn-success btn-sm mt-2">
@@ -24,11 +24,11 @@
 
         <div class="d-flex flex-column mx-2 p-2">
 
-            {% if productos %}
+            {% if vendedores %}
             <div class="d-flex justify-content-end mb-1">
-                <form action="{% url 'buscarProducto' %}" method="post" class="d-flex">
+                <form action="{% url 'buscar_vendedor' %}" method="post" class="d-flex">
                     {% csrf_token %}
-                    <input type="text" name="busqueda" id="busqueda" placeholder="Ingresa una descripción ..." class="form-control">
+                    <input type="text" name="busqueda" id="busqueda" placeholder="Ingresa un nombre ..." class="form-control">
                     <input type="submit" value="Buscar" class="btn btn-outline-success btn-sm mx-2">
                 </form>
             </div>
@@ -36,24 +36,24 @@
             <table class="table table-sm">
                 <thead class="table-dark">
                     <tr>
-                        <th>Descripción</th>
-                        <th>Marca</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Seccion</th>
                         <th><div class="d-flex justify-content-center">Acciones</div></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for producto in productos %}
+                    {% for vendedor in vendedores %}
                     <tr>
-                        <td>{{ producto.descripcion }}</td>
-                        <td>{{ producto.marca }}</td>
-                        <td>${{ producto.precio }}</td>
-                        <td>{{ producto.stock }}</td>
+                        <td>{{ vendedor.nombre }}</td>
+                        <td>{{ vendedor.apellido }}</td>
+                        <td>{{ vendedor.email }}</td>
+                        <td><strong>{{ vendedor.seccion }}</strong></td>
                         <td class="p-2">
                             <div class="d-flex justify-content-center">
-                                <a href="{% url 'editarProducto' producto.id %}" class="btn btn-success btn-sm mx-1">Editar</a>
-                                <a href="{% url 'eliminarProducto' producto.id %}" class="btn btn-danger btn-sm  mx-1">Borrar</a>
+                                <a href="{% url 'editar_vendedor' vendedor.id %}" class="btn btn-success btn-sm mx-1">Editar</a>
+                                <a href="{% url 'eliminar_vendedor' vendedor.id %}" class="btn btn-danger btn-sm  mx-1">Borrar</a>
                             </div>
                         </td>
                     </tr>

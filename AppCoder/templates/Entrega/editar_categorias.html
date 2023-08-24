@@ -1,0 +1,26 @@
+{% extends "Entrega/padre.html" %}
+
+{% load static %}
+
+{% block title %} Categorías {% endblock %}
+
+{% block titulo %} Editar Categoria: {{ categoria.nombre }} {% endblock %}
+
+{% block contenido_que_cambia %}
+
+    <h2>Editar Categoría de Productos</h2>
+
+    <main class="d-flex p-5">
+
+        <div class="mx-2" style="max-width: 600px;">
+            <!-- FORMULARIO -->
+            <form action="{% url 'editar_categorias' categoria.id %}" method="post" class="d-flex flex-column">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <input type="submit" value="Guardar" class="btn btn-success btn-sm mt-2">
+            </form>
+        </div>
+    </main>
+
+
+{% endblock %}

@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.template import Template, Context, loader
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import Curso, Profesor, Estudiante, Producto
-from .forms import CursoForm, ProfesorForm, RegistroUsuarioForm, ProductosForm
+from .models import *
+from .forms import CursoForm, ProfesorForm, RegistroUsuarioForm, ProductosForm, VendedoresForm, CategoriasForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
@@ -310,8 +310,8 @@ def editarProducto(request, id):
 def buscarProducto(request):
     if request.method == "POST":
         filtro = request.POST["busqueda"]
-        mensaje = ""
         allProductos = Producto.objects.filter(descripcion__icontains=filtro)
+        mensaje = f"Resultados encontrados: {allProductos.count()}"
         if not allProductos:
             allProductos = Producto.objects.all()
             mensaje = f"No se encontraron resultados asociados a la descripción '{filtro}'!"
@@ -335,3 +335,165 @@ def crear_productos():
                                stock       = producto["stock"]
                                )
         newProducto.save()
+
+def vendedor(request):
+    mensaje = ""
+    if request.method == "POST":
+        form = VendedoresForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            newVendedor = Vendedor(
+                nombre    = data["nombre"].title().rstrip(),
+                apellido  = data["apellido"].title().rstrip(),
+                email     = data["email"].rstrip(),
+                direccion = data["direccion"].title().rstrip(),
+                seccion   = data["seccion"].title().rstrip()
+            )
+            newVendedor.save()
+            mensaje = "Vendedor creado!"
+        else:
+            mensaje = "Datos inválidos!"
+    vendedores = Vendedor.objects.all()
+    form = VendedoresForm()
+    
+    atributos = ["nombre", "apellido", "email", "direccion", "seccion"]
+    clase     = "form-control h-25 w-100"
+
+    for field_name in atributos:
+        form.fields[field_name].widget.attrs["class"] = clase
+
+    return render(request,
+                  "Entrega/vendedores.html",
+                  {"form":form, "vendedores":vendedores, "mensaje":mensaje})
+
+def editarVendedor(request, id):
+    vendedor = Vendedor.objects.get(id=id)
+
+    if request.method == "POST":
+        form = VendedoresForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            vendedor.nombre     = str(data["nombre"]).title().rstrip()
+            vendedor.apellido   = str(data["apellido"]).title().rstrip()
+            vendedor.email      = data["email"].rstrip()
+            vendedor.direccion  = data["direccion"].title().rstrip()
+            vendedor.seccion    = data["seccion"].title().rstrip()
+
+            vendedor.save()
+            allVendedores = Vendedor.objects.all()
+            form = VendedoresForm()
+            atributos = ["nombre", "apellido", "email", "direccion", "seccion"]
+            clase     = "form-control h-25 w-100"
+
+            for field_name in atributos:
+                form.fields[field_name].widget.attrs["class"] = clase
+
+            return render(request,
+                  "Entrega/vendedores.html",
+                  {"form":form, "vendedores":allVendedores, "mensaje":"Vendedor actualizado!"})
+    else:
+        form = VendedoresForm(initial= {
+            "nombre"    : vendedor.nombre,
+            "apellido"  : vendedor.apellido,
+            "email"     : vendedor.email,
+            "direccion" : vendedor.direccion,
+            "seccion"   : vendedor.seccion
+        })
+        atributos = ["nombre", "apellido", "email", "direccion", "seccion"]
+        clase     = "form-control h-25 w-100"
+
+        for field_name in atributos:
+            form.fields[field_name].widget.attrs["class"] = clase
+
+        return render(request,
+                  "Entrega/editar_vendedor.html",
+                  {"form":form, "vendedor":vendedor})
+
+def eliminarVendedor(request, id):
+    vendedor = Vendedor.objects.get(id=id)
+    vendedor.delete()
+
+    allVendedores = Vendedor.objects.all()
+    form = VendedoresForm()
+    return render(request,
+                  "Entrega/vendedores.html",
+                  {"form":form, "vendedores":allVendedores, "mensaje":"Vendedor eliminado!"})
+
+def buscarVendedor(request):
+
+    if request.method == "POST":
+        filtro = request.POST["busqueda"]
+        allVendedores = Vendedor.objects.filter(nombre__icontains=filtro)
+        mensaje = f"Resultados encontrados: {allVendedores.count()}"
+        if not allVendedores:
+            allVendedores = Vendedor.objects.all()
+            mensaje = f"No se encontraron resultados asociados al nombre: '{filtro}'!"
+        form = VendedoresForm()
+        return render(request,
+                  "Entrega/vendedores.html",
+                  {"form":form, "vendedores":allVendedores, "mensaje":mensaje})
+    
+def categorias(request):
+    mensaje = ""
+    if request.method == "POST":
+        form = CategoriasForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            newCategoria = Categoria(
+                nombre      = data["nombre"].title().strip(),
+                descripcion = data["descripcion"].capitalize().strip(),
+                activo      = data["activo"]
+            )
+            newCategoria.save()
+            mensaje = "Categoría creada!"
+        else:
+            mensaje = "Campos inválidos!"
+    allCategorias = Categoria.objects.all()
+    form = CategoriasForm(initial={"activo":True})
+    return render(request,
+                  "Entrega/categorias.html",
+                  {"form":form, "categorias":allCategorias,"mensaje":mensaje})
+
+def editarCategoria(request, id):
+    mensaje = ""
+    categoria = Categoria.objects.get(id=id)
+    if request.method == "POST":
+        form = CategoriasForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            
+            categoria.nombre      = str(data["nombre"]).title().strip()
+            categoria.descripcion = str(data["descripcion"]).capitalize().strip()
+            categoria.activo      = data["activo"]
+
+            categoria.save()
+
+            allCategorias = Categoria.objects.all()
+            form = CategoriasForm(initial={"activo":True})
+            mensaje = "Categoría actualizada!"
+        else:
+            mensaje = "Campos inválidos!"
+        return render(request,
+                  "Entrega/categorias.html",
+                  {"form":form, "categorias":allCategorias,"mensaje":mensaje})
+    else:
+        form = CategoriasForm(initial= {
+            "nombre"      : categoria.nombre,
+            "descripcion" : categoria.descripcion,
+            "activo"      : categoria.activo
+        })
+        allCategorias = Categoria.objects.all()
+        return render(request,
+                  "Entrega/editar_categorias.html",
+                  {"form":form, "categoria":categoria})
+
+def eliminarCategoria(request, id):
+    categoria = Categoria.objects.get(id = id)
+    categoria.delete()
+
+    allCategorias = Categoria.objects.all()
+    form = CategoriasForm(initial={"activo":True})
+    return render(request,
+                  "Entrega/categorias.html",
+                  {"form":form, "categorias":allCategorias,"mensaje":"Categoría eliminada!"})
+

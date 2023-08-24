@@ -29,4 +29,13 @@ urlpatterns = [
     path('eliminarproducto/<id>', eliminarProducto, name="eliminarProducto"),
     path('editarproducto/<id>', editarProducto, name="editarProducto"),
     path('buscarproducto', buscarProducto, name="buscarProducto"),
+
+    path('vendedores', vendedor, name="listado_vendedores"),
+    path('editarvendedor/<id>', editarVendedor, name="editar_vendedor"),
+    path('eliminarvendedor/<id>', eliminarVendedor, name="eliminar_vendedor"),
+    path('buscarvendedor', buscarVendedor, name="buscar_vendedor"),
+
+    path('categorias', categorias, name="categorias"),
+    path('editarcategoria/<id>', editarCategoria, name="editar_categorias"),
+    path('eliminarcategoria/<id>', eliminarCategoria, name="eliminar_categorias"),
 ]
