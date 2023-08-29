@@ -1,0 +1,28 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block titulo %} Agregar Avatar {% endblock %}
+
+{% block title %} Editar Avatar de {{ usuario }} {% endblock %}
+
+{% block contenido_que_cambia %}
+
+<h2>Profesores</h2>
+<main class="d-flex">
+    <section class="d-flex flex-column">
+        <form action="{% url 'agregarAvatar' %}" method="post" enctype="multipart/form-data" class="m-2 p-2">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <button type="submit" class="btn btn-outline-success m-2 btn-sm">Agregar</button>
+        </form>
+        {% if mensaje != "" %}
+            <h4 class="m-2">{{ mensaje }}</h4>
+        {% endif %}
+    </section>
+    
+</main>
+
+{% endblock %}

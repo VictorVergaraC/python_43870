@@ -4,7 +4,7 @@ from django.template import Template, Context, loader
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import *
-from .forms import CursoForm, ProfesorForm, RegistroUsuarioForm, ProductosForm, VendedoresForm, CategoriasForm
+from .forms import CursoForm, ProfesorForm, RegistroUsuarioForm, ProductosForm, VendedoresForm, CategoriasForm, UserEditForm, AvatarForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
@@ -22,6 +22,14 @@ def crear_curso(request):
     return HttpResponse(respuesta)
 
 @login_required
+def cargarAvatar(request):
+    avatar = Avatar.objects.filter(user = request.user.id)
+    if len(avatar) != 0:
+        return avatar[0].imagen.url
+    
+    return "/media/avatars/default.png"
+
+@login_required
 def listar_cursos(request):
     cursos = Curso.objects.all()
     respuesta = "<h2>Cursos</h2>"
@@ -30,8 +38,7 @@ def listar_cursos(request):
     return HttpResponse(respuesta)
 
 def inicio(request):
-
-    return render(request,"AppCoder/inicio.html")
+    return render(request,"AppCoder/inicio.html", {"avatar": cargarAvatar(request)})
 
 @login_required
 def profesores(request):
@@ -59,7 +66,7 @@ def profesores(request):
     profes = Profesor.objects.all()
     return render(request,
                   "AppCoder/profesores.html", 
-                  {"profes":profes, "formulario":formulario, "mensaje":mensaje}
+                  {"profes":profes, "formulario":formulario, "mensaje":mensaje, "avatar": cargarAvatar(request)}
             )
 
 @login_required
@@ -71,7 +78,7 @@ def eliminarProfesor(request, id):
     profes = Profesor.objects.all()
     return render(request,
                   "AppCoder/profesores.html", 
-                  {"profes":profes, "formulario":formulario, "mensaje":"Profesor Eliminado!"}
+                  {"profes":profes, "formulario":formulario, "mensaje":"Profesor Eliminado!", "avatar": cargarAvatar(request)}
             )
 
 @login_required
@@ -95,7 +102,7 @@ def editarProfesor(request, id):
 
             return render(request,
                   "AppCoder/profesores.html", 
-                  {"profes":profes, "formulario":formulario, "mensaje":mensaje}
+                  {"profes":profes, "formulario":formulario, "mensaje":mensaje, "avatar": cargarAvatar(request)}
             )
     else:
         formulario = ProfesorForm(initial= {
@@ -106,14 +113,14 @@ def editarProfesor(request, id):
         })
         return render(request,
                       "AppCoder/editarProfesor.html",
-                      { "formulario":formulario, "profesor":profesor }
+                      { "formulario":formulario, "profesor":profesor, "avatar": cargarAvatar(request) }
                 )
 
 def estudiantes(request):
     estudiantes = Estudiante.objects.all()
     return render(request,
                   "AppCoder/estudiantes.html", 
-                  {"estudiantes":estudiantes}
+                  {"estudiantes":estudiantes, "avatar": cargarAvatar(request)}
             )
 
 
@@ -134,15 +141,15 @@ def cursos(request):
             curso.save()
             mensaje = "Curso creado satisfactoriamente!"
             
-        return render(request, "AppCoder/cursos.html", {"mensaje":mensaje})
+        return render(request, "AppCoder/cursos.html", {"mensaje":mensaje, "avatar": cargarAvatar(request)})
     
     formulario_curso = CursoForm()
-    return render(request, "AppCoder/cursos.html",{"formulario":formulario_curso})
+    return render(request, "AppCoder/cursos.html",{"formulario":formulario_curso, "avatar": cargarAvatar(request)})
 
 @login_required
 def entregables(request):
 
-    return render(request,"AppCoder/cursos.html")
+    return render(request,"AppCoder/cursos.html", { "avatar":cargarAvatar(request) })
 
 @login_required
 def busquedaComision(request):
@@ -160,7 +167,7 @@ def buscar(request):
     return render(
             request,
             "AppCoder/resultadosBusqueda.html",
-            {"cursos":listar_cursos, "mensaje":mensaje}
+            {"cursos":listar_cursos, "mensaje":mensaje, "avatar": cargarAvatar(request)}
         )
 
 
@@ -232,6 +239,55 @@ def register(request):
     return render(request,
                   "AppCoder/register.html",
                   {"formulario":form})
+
+def editarPerfil(request):
+    usuario = request.user
+    if request.method == "POST":
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            usuario.email = data["email"]
+            usuario.password1 = data["password1"]
+            usuario.password2 = data["password2"]
+            usuario.first_name = data["first_name"]
+            usuario.last_name = data["last_name"]
+            usuario.save()
+            return render(
+                request,
+                "AppCoder/inicio.html",
+                {"mensaje":f"Usuario {usuario.username} actualizado!", "avatar":cargarAvatar(request)}
+            )
+        return render(
+                request,
+                "AppCoder/editarPerfil.html",
+                {"form":form, "mensaje":f"Datos inválidos!", "nombreusuario":usuario.username, "avatar":cargarAvatar(request)}
+            )
+        
+    form = UserEditForm(instance=usuario)
+    return render(request,
+                  "AppCoder/editarPerfil.html",
+                  {"form":form, "nombreusuario":usuario.username, "avatar":cargarAvatar(request)})
+
+@login_required
+def agregarAvatar(request):
+    if request.method == "POST":
+        form = AvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+            avatar = Avatar(user = request.user, imagen = form.cleaned_data['imagen'])
+            oldAvatar = Avatar.objects.filter(user = request.user)
+            if len(oldAvatar) > 0:
+                oldAvatar.delete()
+            avatar.save()
+            return render(request,
+                          "AppCoder/inicio.html",
+                          {"mensaje":"Avatar agregado correctamente!", "avatar":cargarAvatar(request)})
+        return render(request,
+                          "AppCoder/inicio.html",
+                          {"mensaje":"Error al cargar avatar!", "avatar":cargarAvatar(request)})
+    form = AvatarForm()
+    return render(request,
+                  "AppCoder/agregarAvatar.html",
+                  {"form":form, "usuario":request.user,"avatar":cargarAvatar(request)})
 
 # PRE ENTREGA 3
 

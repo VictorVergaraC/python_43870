@@ -29,9 +29,15 @@
                 <a class="btn btn-warning" href="{% url 'estudiante_list' %}">Estudiantes</a>
                 <a class="btn btn-success" href="{% url 'cursos' %}"         >Cursos</a>
                 <p>Bienvenido: {{ user.username }}</p>
+                
+                <img src="{{ avatar }}" alt="{{ user.username }}" style="width: 50px; border-radius: 10px;">
+                
                 <a class="btn btn-danger"  href="{% url 'logout' %}"         >Logout</a>
+                <a class="btn btn-primary" href="{% url 'editarPerfil' %}"   >Editar Perfil</a>
+                <a class="btn btn-success" href="{% url 'agregarAvatar' %}"  >Avatar</a>
                 {% else %}
                 <a class="btn btn-primary" href="{% url 'login' %}"          >Login</a>
+                <a class="btn btn-success" href="{% url 'register' %}"       >Registrarme</a>
                 {% endif %}
             </div>
         </nav>
